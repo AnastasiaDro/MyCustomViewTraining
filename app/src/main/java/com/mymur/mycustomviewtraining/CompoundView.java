@@ -1,11 +1,20 @@
 package com.mymur.mycustomviewtraining;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.telephony.SmsManager;
 import android.util.AttributeSet;
+import android.util.Patterns;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+
+import java.net.URI;
+
+import static android.util.Patterns.PHONE;
 
 public class CompoundView extends RelativeLayout {
     private EditText phoneInput, smsInput;
@@ -39,9 +48,12 @@ public class CompoundView extends RelativeLayout {
     protected void onFinishInflate(){
         super.onFinishInflate();
         initUI();
+
         //дальше тут идёт вся основная логика
         // set onClickListeners
         //other data logics
+        setOnCallBtnClickBehavior();
+        setOnSmsBtnClickBehavior();
     }
 
 
@@ -52,4 +64,51 @@ public class CompoundView extends RelativeLayout {
         callBtn = this.findViewById(R.id.callBtn);
         sendSmsBtn = this.findViewById(R.id.sendSms);
     }
+
+
+    private void setOnCallBtnClickBehavior() {
+        callBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = phoneInput.getText().toString().replaceAll("-", "");
+                //проверим телефон
+                //android.util.Patterns.PHONE.matcher(phoneNumber).matches()
+                //т.е. у нас инпут тАйп у поля  - Phone, то проверка нам не нужна
+//                if (PHONE.matcher(phoneNumber).matches()) {
+//                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    getContext().startActivity(intent);
+//                }
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getContext().startActivity(intent);
+            }
+        });
+    }
+
+    private void setOnSmsBtnClickBehavior() {
+        sendSmsBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String smsText = smsInput.getText().toString();
+                String phoneNumber = phoneInput.getText().toString().replaceAll("-", "");
+                String toNumberSms="smsto:" + phoneNumber;
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(toNumberSms));
+                intent.putExtra("sms_body", smsText);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+
+                //либо сразу отправка:
+                //но этот способ требует в манифесте указать uses pernmission
+                //в манифесте перед app
+                //<uses-permission android:name="android.permission.SEND_SMS"/>
+              //  SmsManager.getDefault().sendTextMessage(phoneNumber, null, smsText, null, null);
+
+
+            }
+        });
+    }
+
+
 }
