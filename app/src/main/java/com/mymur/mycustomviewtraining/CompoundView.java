@@ -93,7 +93,7 @@ public class CompoundView extends RelativeLayout {
                 String smsText = smsInput.getText().toString();
                 String phoneNumber = phoneInput.getText().toString().replaceAll("-", "");
                 String toNumberSms="smsto:" + phoneNumber;
-
+                //не сработает, если Uri.Parse(>>тут пусто<<)
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(toNumberSms));
                 intent.putExtra("sms_body", smsText);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
