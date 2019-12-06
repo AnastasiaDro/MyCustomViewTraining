@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ public class CustomView extends View {
     //нажат ли круг,нужно, чтобы делать анимацию
     private boolean pressed = false;
     //в него будем сеттить поле извне, чтобы могли обработать нажатие и дорисовать ещё анимацию
+    //см метод onTouchEvent - мы в нем сперва делаем анимацию,а потом вызываем onClick, если мы свой он клик не переопределим, он будет срабатывать ДО анимации
     private View.OnClickListener listener;
 
 
@@ -82,7 +84,30 @@ public class CustomView extends View {
     //чтобы нарисовать View, нужно переопределить метод onDraw
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.d(TAG, "onDraw");
         super.onDraw(canvas);
+        if(pressed) {
+            canvas.drawCircle(radius, radius, radius/10, paint);
+        } else {
+            canvas.drawCircle(radius, radius, radius, paint);
+        }
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        int action = event.getAction();
+        if(action == MotionEvent.ACTION_DOWN) {//Нажали
+            pressed = true;
+            invalidate();    //перерисовка элемента
+            if (listener != null) listener.onClick(this);
+        } else if(action == MotionEvent.ACTION_UP) {//Отпустили
+            pressed = false;
+            invalidate();    //перерисовка элемента
+        }
+        return  true;
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable View.OnClickListener l) {listener = l;}
 
 }
