@@ -69,7 +69,8 @@ public class CustomView extends View {
     private void  initAttr(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomView, 0, 0);
         setRadius(typedArray.getInt(R.styleable.CustomView_cv_Radius, 50));
-        setBackgroundColor(typedArray.getColor(R.styleable.CustomView_cv_Color, Color.BLUE));
+        //BLUE - цвет по умолчанию, если в атрибутах не указывается цвет
+        setColor(typedArray.getColor(R.styleable.CustomView_cv_Color, Color.BLUE));
         typedArray.recycle();
     }
 
