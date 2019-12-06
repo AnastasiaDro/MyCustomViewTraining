@@ -27,6 +27,7 @@ public class SensorsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sensors);
         initViews();
         getSensors();
+        showSensors();
     }
 
     private void initViews() {
@@ -64,10 +65,12 @@ public class SensorsActivity extends AppCompatActivity {
             stringBuilder.append("name = ").append(sensor.getName())
                     .append(", type = ").append(sensor.getType())
                     .append("\n")
+                    //venfor - разработчик сенсора
                     .append("vendor = ").append(sensor.getVendor())
                     .append(" ,version = ").append(sensor.getVersion())
                     .append("\n")
                     .append("max = ").append(sensor.getMaximumRange())
+                    //resolution - состояние сенсора
                     .append(", resolution = ").append(sensor.getResolution())
                     .append("\n").append("---------------------------------------").append("\n");
         }
